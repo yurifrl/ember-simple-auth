@@ -3,13 +3,19 @@ import getOwner from 'ember-getowner-polyfill';
 
 const { on } = Ember;
 
-export default Ember.ObjectProxy.extend(Ember.Evented, {
+const SessionData = Ember.Object.extend({
+  set(key, value) {
+    debugger;
+    return this._super(...arguments);
+  }
+});
+
+export default Ember.Object.extend(Ember.Evented, {
   authenticator:       null,
   store:               null,
   container:           null,
   isAuthenticated:     false,
   attemptedTransition: null,
-  content:             { authenticated: {} },
 
   authenticate() {
     let args          = Array.prototype.slice.call(arguments);
@@ -67,6 +73,12 @@ export default Ember.ObjectProxy.extend(Ember.Evented, {
       }
     });
   },
+
+  _setupSessionContent: on('init', function() {
+    debugger;
+    const content = SessionData.create({ authenticated: {} });
+    this.set('content', content);
+  }),
 
   _setup(authenticator, authenticatedContent, trigger) {
     trigger = !!trigger && !this.get('isAuthenticated');
