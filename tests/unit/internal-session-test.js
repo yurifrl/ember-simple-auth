@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import InternalSession from 'ember-simple-auth/internal-session';
 import EphemeralStore from 'ember-simple-auth/session-stores/ephemeral';
 import Authenticator from 'ember-simple-auth/authenticators/base';
+import SessionData from 'ember-simple-auth/session-data';
 
 describe('InternalSession', () => {
   let session;
@@ -58,11 +59,11 @@ describe('InternalSession', () => {
       });
 
       it('clears its authenticated section', (done) => {
-        session.set('content', Ember.Object.create({ some: 'property', authenticated: { some: 'other property' } }));
+        session.set('content', SessionData.create({ some: 'property', authenticated: { some: 'other property' } }));
         authenticator.trigger('sessionDataInvalidated');
 
         Ember.run.next(() => {
-          expect(session.get('content')).to.eql(Ember.Object.create({ some: 'property', authenticated: {} }));
+          expect(session.get('content')).to.eql(SessionData.create({ some: 'property', authenticated: {} }));
           done();
         });
       });
@@ -111,7 +112,7 @@ describe('InternalSession', () => {
         store.persist({ some: 'property', authenticated: { some: 'other property' } });
 
         return session.restore().catch(() => {
-          expect(session.get('content')).to.eql(Ember.Object.create({ some: 'property', authenticated: {} }));
+          expect(session.get('content')).to.eql(SessionData.create({ some: 'property', authenticated: {} }));
         });
       });
     }
@@ -330,10 +331,10 @@ describe('InternalSession', () => {
 
       it('clears its authenticated section', () => {
         sinon.stub(authenticator, 'authenticate').returns(Ember.RSVP.reject('error auth'));
-        session.set('content', Ember.Object.create({ some: 'property', authenticated: { some: 'other property' } }));
+        session.set('content', SessionData.create({ some: 'property', authenticated: { some: 'other property' } }));
 
         return session.authenticate('authenticator').catch(() => {
-          expect(session.get('content')).to.eql(Ember.Object.create({ some: 'property', authenticated: {} }));
+          expect(session.get('content')).to.eql(SessionData.create({ some: 'property', authenticated: {} }));
         });
       });
 
@@ -396,10 +397,10 @@ describe('InternalSession', () => {
       });
 
       it('clears its authenticated section', () => {
-        session.set('content', Ember.Object.create({ some: 'property', authenticated: { some: 'other property' } }));
+        session.set('content', SessionData.create({ some: 'property', authenticated: { some: 'other property' } }));
 
         return session.invalidate().then(() => {
-          expect(session.get('content')).to.eql(Ember.Object.create({ some: 'property', authenticated: {} }));
+          expect(session.get('content')).to.eql(SessionData.create({ some: 'property', authenticated: {} }));
         });
       });
 
@@ -602,11 +603,11 @@ describe('InternalSession', () => {
         });
 
         it('clears its authenticated section', (done) => {
-          session.set('content', Ember.Object.create({ some: 'property', authenticated: { some: 'other property' } }));
+          session.set('content', SessionData.create({ some: 'property', authenticated: { some: 'other property' } }));
           store.trigger('sessionDataUpdated', { some: 'other property', authenticated: { authenticator: 'authenticator' } });
 
           Ember.run.next(() => {
-            expect(session.get('content')).to.eql(Ember.Object.create({ some: 'other property', authenticated: {} }));
+            expect(session.get('content')).to.eql(SessionData.create({ some: 'other property', authenticated: {} }));
             done();
           });
         });
@@ -669,11 +670,11 @@ describe('InternalSession', () => {
       });
 
       it('clears its authenticated section', (done) => {
-        session.set('content', Ember.Object.create({ some: 'property', authenticated: { some: 'other property' } }));
+        session.set('content', SessionData.create({ some: 'property', authenticated: { some: 'other property' } }));
         store.trigger('sessionDataUpdated', { some: 'other property' });
 
         Ember.run.next(() => {
-          expect(session.get('content')).to.eql(Ember.Object.create({ some: 'other property', authenticated: {} }));
+          expect(session.get('content')).to.eql(SessionData.create({ some: 'other property', authenticated: {} }));
           done();
         });
       });
